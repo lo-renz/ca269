@@ -5,11 +5,9 @@ public class Pokemon_5 {
     int damage = 1;
     static int damage_base = 15; // All pokemon use this as a base.
     // each pokemon have a set of moves.
-
     public static void main(String[] args) {
-        Move Bulbasaur = new Move("Razor Leaf", 15);
-        System.out.println(Bulbasaur);
-        System.out.println(Bulbasaur.damage);
+        Move moves = new Move("Razor Leaf", 15);
+        System.out.println(moves);
     }
 }
 
@@ -17,7 +15,7 @@ class Move {
     String name = "";
     int damage = 0;
     public String toString() {
-        return this.name;
+        return this.name + " " + this.damage;
     }
 
     Move(String name, int damage) {
