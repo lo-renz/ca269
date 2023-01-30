@@ -83,6 +83,8 @@ class Task {
         t1.setDeadline(tomorrow);
         System.out.println(t1.toString());
 
+        System.out.println("----------");
+
         // ReapeatedTask testing.
         Task rp1 = new RepeatedTask("RP1", State.TODO);
         System.out.println(rp1);
@@ -91,11 +93,15 @@ class Task {
         rp1.setState(State.DONE);
         System.out.println("This is when the state was changed to 'DONE'\n" + rp1);
 
+        System.out.println("----------");
+
         // Chore testing.
         Task c1 = new Chore("C1", State.TODO, LocalDate.now(), LocalDate.now().plus(Period.ofDays(7)));
         System.out.println(c1);
         c1.setState(State.DONE);
         System.out.println(c1);
+
+        System.out.println("----------");
     }
 }
 
