@@ -77,6 +77,7 @@ class Pokemon_1 {
         // change the GENERATION variable above to final and
         // check if the above is still allowed
 
-        System.out.println(Pokemon_2.sayHello("Java"));
+        Pokemon_2 x = new Pokemon_2();
+        System.out.println(x);
     }
 }
