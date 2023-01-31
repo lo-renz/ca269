@@ -73,48 +73,28 @@ class Task {
     }
 
     public static void main(String[] args) {
-        LocalDate now = LocalDate.now();
-        LocalDate tomorrow = LocalDate.now();
-
-        // Task testing.
         Task t1 = new Task("T1", State.TODO);
+        LocalDate now = LocalDate.now();
+        LocalDate.now();
         System.out.println(t1);
-        t1.setScheduled(now);
-        t1.setDeadline(tomorrow);
-        System.out.println(t1.toString());
 
-        System.out.println("----------");
+        Task s1 = new RepeatedTask("S1", State.TODO);
+        System.out.println(s1);
+        s1.setState(State.DONE);
+        System.out.println(s1);
 
-        // ReapeatedTask testing.
-        Task rp1 = new RepeatedTask("RP1", State.TODO);
-        System.out.println(rp1);
-        rp1.setState(State.HALT);
-        System.out.println("This is when the state was changed to 'HALT'\n" + rp1);
-        rp1.setState(State.DONE);
-        System.out.println("This is when the state was changed to 'DONE'\n" + rp1);
+        Task s2 = new Chore("S2", State.TODO, LocalDate.now(), LocalDate.now().plus(Period.ofDays(7)));
+        System.out.println(s2);
+        s2.setState(State.DONE);
+        System.out.println(s2);
 
-        System.out.println("----------");
-
-        // Chore testing.
-        Task c1 = new Chore("C1", State.TODO, LocalDate.now(), LocalDate.now().plus(Period.ofDays(7)));
-        System.out.println(c1);
-        c1.setState(State.DONE);
-        System.out.println(c1);
-
-        System.out.println("----------");
-
-        // SharedTask testing.
-        Task st1 = new SharedTask("ST1", "Renso");
-        System.out.println(st1);
-
-        System.out.println("----------");
-        Task d1 = new Dependency("D1", State.TODO, t1);
-        System.out.println(d1);
-        d1.setState(State.DONE);
-        System.out.println(d1 + " This will not change the task's state to DONE because the dependent task is not labelled as DONE.");
+        Task t3 = new Dependency("T3", State.TODO, t1);
+        System.out.println(t3);
+        t3.setState(State.DONE);
+        System.out.println(t3);
         t1.setState(State.DONE);
-        d1.setState(State.DONE);
-        System.out.println(d1);
+        t3.setState(State.DONE);
+        System.out.println(t3);
     }
 }
 
