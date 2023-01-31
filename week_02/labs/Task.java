@@ -102,6 +102,19 @@ class Task {
         System.out.println(c1);
 
         System.out.println("----------");
+
+        // SharedTask testing.
+        Task st1 = new SharedTask("ST1", "Renso");
+        System.out.println(st1);
+
+        System.out.println("----------");
+        Task d1 = new Dependency("D1", State.TODO, t1);
+        System.out.println(d1);
+        d1.setState(State.DONE);
+        System.out.println(d1 + " This will not change the task's state to DONE because the dependent task is not labelled as DONE.");
+        t1.setState(State.DONE);
+        d1.setState(State.DONE);
+        System.out.println(d1);
     }
 }
 
@@ -148,6 +161,45 @@ class Chore extends RepeatedTask {
             LocalDate repeat_new = repeat.plus(Period.ofDays(7));
             setScheduled(repeat);
             setRepeat(repeat_new);
+        }
+    }
+}
+
+class SharedTask extends Task {
+    String name;
+
+    SharedTask(String title, String name) {
+        super(title, State.WAIT);
+        this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + " shared with: " + name;
+    }
+}
+
+class Dependency extends Task {
+    Task task_dependency;
+
+    Dependency(String title, State state, Task task_dependency) {
+        super(title, state);
+        this.task_dependency = task_dependency;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + " dependent on: " + task_dependency.toString();
+    }
+
+    @Override
+    public void setState(State state) {
+        // For the current Task to be labelled as DONE, both the dependent task and current task must be labelled as DONE.
+        if(state == State.DONE && task_dependency.state != State.DONE) {
+            return;
+        }
+        else {
+            this.state = state;
         }
     }
 }
