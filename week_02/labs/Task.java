@@ -95,6 +95,8 @@ class Task {
         t1.setState(State.DONE);
         t3.setState(State.DONE);
         System.out.println(t3);
+
+        System.out.println("The class running right now is: " + t3.getClass());
     }
 }
 
