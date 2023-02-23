@@ -89,15 +89,18 @@ public class Task {
 
         System.out.println("----------");
 
-        // Test for Repeating class
+        // Test for RepeatedTask class
         RepeatedTask r1 = new RepeatedTask("RepeatedTask Test", State.WAIT);
         System.out.println(r1);
         r1.setState(State.DONE);
         System.out.println(r1);
+
+        // Test for SharedTask class
+        SharedTask s1 = new SharedTask("SharedTask Test", "Bob");
+        System.out.println(s1);
     }
 }
 
-// Need to write the Chore, ReapeatingTask, SharedTask, Dependency classes.
 class Chore extends Task {
     LocalDate repeat;
 
@@ -138,5 +141,30 @@ class RepeatedTask extends Task {
         if (state == State.DONE) {
            setState(State.TODO); 
         }
+    }
+}
+
+class SharedTask extends RepeatedTask {
+    String name;
+
+    public String getName() {
+        return this.name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    SharedTask(String title, String name) {
+        super(title, State.WAIT);
+        setName(name);
+    }
+
+    public void setState(State state) {
+        this.state = State.WAIT;
+    }
+
+    public String toString() {
+        return title + " (" + state + ") shared with: " + name;
     }
 }
