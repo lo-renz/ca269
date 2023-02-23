@@ -1,10 +1,9 @@
 public class Test {
-
     String name;
     int age;
 
-    public void setName(String name) {
-        this.name = name;
+    public int getAge() {
+        return age;
     }
 
     public void setAge(int age) {
@@ -12,15 +11,11 @@ public class Test {
     }
 
     public String getName() {
-        return this.name;
+        return name;
     }
 
-    public int getAge() {
-        return this.age;
-    }
-
-    public void printDetails() {
-        System.out.println(getName() + ", " + getAge());
+    public void setName(String name) {
+        this.name = name;
     }
 
     public static void main(String[] args) {
@@ -28,9 +23,13 @@ public class Test {
 
         a.setName("Renso");
         a.setAge(19);
-        System.out.println(a.getName());
-        System.out.println(a.getAge());
 
+        //System.out.println(a.getName());
+        //System.out.println(a.getAge());
         a.printDetails();
+    }
+
+    public void printDetails() {
+        System.out.println(name + ", " + age);
     }
 }
