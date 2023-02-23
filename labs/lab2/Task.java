@@ -79,14 +79,18 @@ public class Task {
         t1.setScheduled(now);
         System.out.println(t1);
 
+        System.out.println("----------");
+
         // Test for Chore class
         Chore c1 = new Chore("Chore Test", State.TODO, LocalDate.now(), LocalDate.now().plus(Period.ofDays(7)));
         System.out.println(c1);
         c1.setState(State.TODO);
         System.out.println(c1);
 
+        System.out.println("----------");
+
         // Test for Repeating class
-        Repeating r1 = new Repeating("Repeating Test", State.WAIT);
+        RepeatedTask r1 = new RepeatedTask("RepeatedTask Test", State.WAIT);
         System.out.println(r1);
         r1.setState(State.DONE);
         System.out.println(r1);
@@ -123,8 +127,8 @@ class Chore extends Task {
     }
 }
 
-class Repeating extends Task {
-    Repeating(String title, State state) {
+class RepeatedTask extends Task {
+    RepeatedTask(String title, State state) {
         super(title, state);
     }
 
