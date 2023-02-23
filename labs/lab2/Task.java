@@ -1,4 +1,5 @@
 import java.time.LocalDate;
+import java.time.Period;
 
 enum State {
     TODO, BEGN, HALT, WAIT, DONE;
@@ -72,11 +73,45 @@ public class Task {
         }
 
     public static void main(String[] args) {
-        Task t1 = new Task("Test", State.TODO);
+        // Test for Task class
+        Task t1 = new Task("Task Test", State.TODO);
         LocalDate now = LocalDate.now();
         t1.setScheduled(now);
         System.out.println(t1);
+
+        // Test for Chore class
+        Chore c1 = new Chore("Chore Test", State.TODO, LocalDate.now(), LocalDate.now().plus(Period.ofDays(7)));
+        System.out.println(c1);
+        c1.setState(State.DONE);
+        System.out.println(c1);
     }
 }
 
 // Need to write the Chore, ReapeatingTask, SharedTask, Dependency classes.
+class Chore extends Task {
+    LocalDate repeat;
+
+    public LocalDate getRepeat() {
+        return repeat;
+    }
+
+    public void setRepeat(LocalDate repeat) {
+        this.repeat = repeat;
+    }
+
+    Chore(String title, State state, LocalDate scheduled, LocalDate repeat) {
+        super(title, state);
+        setScheduled(scheduled);
+        setRepeat(repeat);
+    }
+
+    public void setState(State state) {
+        this.state = state;
+        if (state == State.DONE) {
+            LocalDate newRepeatDate = repeat.plus(Period.ofDays(7));
+            setScheduled(repeat);
+            setRepeat(newRepeatDate);
+            state = State.TODO;
+        }
+    }
+}
