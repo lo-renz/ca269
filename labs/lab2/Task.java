@@ -82,7 +82,7 @@ public class Task {
         // Test for Chore class
         Chore c1 = new Chore("Chore Test", State.TODO, LocalDate.now(), LocalDate.now().plus(Period.ofDays(7)));
         System.out.println(c1);
-        c1.setState(State.DONE);
+        c1.setState(State.TODO);
         System.out.println(c1);
     }
 }
