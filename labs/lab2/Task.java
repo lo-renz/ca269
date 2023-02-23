@@ -84,6 +84,12 @@ public class Task {
         System.out.println(c1);
         c1.setState(State.TODO);
         System.out.println(c1);
+
+        // Test for Repeating class
+        Repeating r1 = new Repeating("Repeating Test", State.WAIT);
+        System.out.println(r1);
+        r1.setState(State.DONE);
+        System.out.println(r1);
     }
 }
 
@@ -106,12 +112,27 @@ class Chore extends Task {
     }
 
     public void setState(State state) {
-        this.state = state;
+        super.setState(state);
+
         if (state == State.DONE) {
             LocalDate newRepeatDate = repeat.plus(Period.ofDays(7));
             setScheduled(repeat);
             setRepeat(newRepeatDate);
             state = State.TODO;
+        }
+    }
+}
+
+class Repeating extends Task {
+    Repeating(String title, State state) {
+        super(title, state);
+    }
+
+    public void setState(State state) {
+        super.setState(state);
+
+        if (state == State.DONE) {
+           setState(State.TODO); 
         }
     }
 }
