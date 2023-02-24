@@ -1,4 +1,4 @@
-// NEED TO FIX Chore and Dependency.
+// NEED TO FIX: Dependency.
 
 import java.time.LocalDate;
 import java.time.Period;
@@ -86,7 +86,7 @@ public class Task {
         // Test for Chore class
         Chore c1 = new Chore("Chore Test", State.TODO, LocalDate.now(), LocalDate.now().plus(Period.ofDays(7)));
         System.out.println(c1);
-        c1.setState(State.TODO);
+        c1.setState(State.DONE);
         System.out.println(c1);
 
         // Second test for Chorfe class
@@ -134,7 +134,6 @@ class Chore extends Task {
 
     public void setState(State state) {
         super.setState(state);
-        this.state = state;
         if (state == State.DONE) {
             LocalDate newRepeatDate = repeat.plus(Period.ofDays(7));
             setScheduled(repeat);
