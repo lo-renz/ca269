@@ -1,5 +1,3 @@
-// NEED TO FIX: Dependency.
-
 import java.time.LocalDate;
 import java.time.Period;
 
@@ -110,7 +108,11 @@ public class Task {
         System.out.println("----------");
 
         // Test for Dependency class
-        Dependency d1 = new Dependency("Dependency Test", State.HALT, r1);
+        Dependency d1 = new Dependency("Dependency Test", State.HALT, t1);
+        System.out.println(d1);
+        d1.setState(State.DONE);
+        System.out.println(d1);
+        t1.setState(State.DONE);
         System.out.println(d1);
     }
 }
@@ -185,12 +187,12 @@ class SharedTask extends RepeatedTask {
 class Dependency extends Task {
     Task task;
 
-    public Task getTask() {
-        return this.task;
+    public Task getTask(Task task) {
+        return task;
     }
 
     public void setTask(Task task) {
-        task = this.task;
+        this.task = task;
     }
 
     Dependency(String title, State state, Task task) {
@@ -199,18 +201,14 @@ class Dependency extends Task {
     }
 
     public void setState(State state) {
-        super.setState(state);
-
-        if (task.state == State.DONE) {
-            state = State.DONE;
-        }
-        else {
-            setState(state);
+        if (state == State.DONE && task.state == State.DONE) {
+            this.state = state;
         }
     }
 
     public String toString() {
-        return task.title;
-        //return title + " (" + state + ") dependent on: " + taskTitle + " (" + task.state + ")";
+        String str = this.title + " (" + this.state + ")";
+        String taskStr = task.title + " (" + task.state + ")";
+        return str + " dependent on: " + taskStr;
     }
 }
