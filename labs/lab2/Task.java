@@ -1,3 +1,5 @@
+// NEED TO FIX Chore and Dependency.
+
 import java.time.LocalDate;
 import java.time.Period;
 
@@ -87,6 +89,10 @@ public class Task {
         c1.setState(State.TODO);
         System.out.println(c1);
 
+        // Second test for Chorfe class
+        Chore c2 = new Chore("Second Chore Test", State.TODO, LocalDate.now(), LocalDate.now().plus(Period.ofDays(7)));
+        System.out.println(c2);
+
         System.out.println("----------");
 
         // Test for RepeatedTask class
@@ -95,9 +101,17 @@ public class Task {
         r1.setState(State.DONE);
         System.out.println(r1);
 
+        System.out.println("----------");
+
         // Test for SharedTask class
         SharedTask s1 = new SharedTask("SharedTask Test", "Bob");
         System.out.println(s1);
+
+        System.out.println("----------");
+
+        // Test for Dependency class
+        Dependency d1 = new Dependency("Dependency Test", State.HALT, r1);
+        System.out.println(d1);
     }
 }
 
@@ -120,12 +134,12 @@ class Chore extends Task {
 
     public void setState(State state) {
         super.setState(state);
-
+        this.state = state;
         if (state == State.DONE) {
             LocalDate newRepeatDate = repeat.plus(Period.ofDays(7));
             setScheduled(repeat);
             setRepeat(newRepeatDate);
-            state = State.TODO;
+            setState(State.TODO);
         }
     }
 }
@@ -166,5 +180,38 @@ class SharedTask extends RepeatedTask {
 
     public String toString() {
         return title + " (" + state + ") shared with: " + name;
+    }
+}
+
+class Dependency extends Task {
+    Task task;
+
+    public Task getTask() {
+        return this.task;
+    }
+
+    public void setTask(Task task) {
+        task = this.task;
+    }
+
+    Dependency(String title, State state, Task task) {
+        super(title, state);
+        setTask(task);
+    }
+
+    public void setState(State state) {
+        super.setState(state);
+
+        if (task.state == State.DONE) {
+            state = State.DONE;
+        }
+        else {
+            setState(state);
+        }
+    }
+
+    public String toString() {
+        return task.title;
+        //return title + " (" + state + ") dependent on: " + taskTitle + " (" + task.state + ")";
     }
 }
