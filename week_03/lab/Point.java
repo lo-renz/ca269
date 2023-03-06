@@ -1,3 +1,11 @@
+interface Order {
+    public boolean lessThan(Order order);
+}
+
+interface Comparable extends Order {
+    public int compareTo(Object other);
+}
+
 public class Point implements Comparable {
     private double x, y;
 
