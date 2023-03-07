@@ -53,7 +53,7 @@ class Value implements Comparable<Value> {
 
     public int compareTo(Value other) {
         if(Value.SORT_LOWER == true) {
-            return Integer.compare(this.value, other.value);
+            return Integer.compare(this.value, other.value); // returns 0, -1, 1 if the numbers are equal to, less than or greater than respectively.
         }
         else if(Value.SORT_LOWER == false) {
             return Integer.compare(other.value, this.value);
