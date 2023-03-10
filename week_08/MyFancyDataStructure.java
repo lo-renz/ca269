@@ -1,12 +1,12 @@
 import java.util.*;
 
-//interface Comparable<T> {
-//    public int compareTo(T other);
-//}
+interface Comparable<T> {
+    public int compareTo(T other);
+}
 
-//interface Comparator<T> {
-//    public int compare(T o1, T o2);
-//}
+interface Comparator<T> {
+    public int compare(T o1, T o2);
+}
 
 class Value implements Comparable<Value> {
     final int value;
@@ -79,20 +79,20 @@ public class MyFancyDataStructure {
         List<Value> list = Arrays.asList(new Value(2), new Value(3), new Value(1));
 
         Value.setSortLower();
-        Collections.sort(list);
+        //Collections.sort(list);
         System.out.println(list);
         // OUTPUT: [1, 2, 3]
 
         Value.setSortHigher();
-        Collections.sort(list);
+        //Collections.sort(list);
         System.out.println(list);
         // OUTPUT: [3, 2, 1]
 
-        list.sort(new PreferLowerValues());
+        //list.sort(new PreferLowerValues());
         System.out.println(list);
         // OUTPUT: [1, 2, 3]
 
-        list.sort(new PreferHigherValues());
+        //list.sort(new PreferHigherValues());
         System.out.println(list);
         // OUTPUT: [3, 2, 1]
     }
