@@ -124,6 +124,7 @@ class StarWarsCharacters implements java.io.Serializable {
 
 public class JarJarBinks {
     public static void main(String args[]) {
+        // I/O
         /*try {
             BufferedReader in = new BufferedReader(new FileReader("test.txt"));
             BufferedWriter out = new BufferedWriter(new FileWriter("output.txt"));
@@ -136,6 +137,7 @@ public class JarJarBinks {
         } catch(Exception e) {
         }*/
 
+        // CSV I/O
         Scanner input = new Scanner(new File("characters.csv"));
         input.useDelimiter(",");
         while(input.hasNextLine()) {
