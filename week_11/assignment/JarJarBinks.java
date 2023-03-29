@@ -1,20 +1,25 @@
+package assignment;
+
+/**
+ * JarJarBinks.java = Week 11 Assignment
+ * @author guilalr2
+ */
+
 import java.util.List;
 import java.util.ArrayList;
-import java.util.StringTokenizer;
 
 // CSV
-import java.util.Scanner;
+import org.apache.commons.csv.CSVRecord;
+import org.apache.commons.csv.CSVFormat;
+import java.io.Reader;
 
-import java.io.FileNotFoundException;
+// Gson
+import com.google.gson.Gson;
+
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
 
-class StarWarsCharacters implements java.io.Serializable {
+class StarWarsCharacter implements java.io.Serializable {
     private List list;
 
     // properties
@@ -26,11 +31,11 @@ class StarWarsCharacters implements java.io.Serializable {
     String eyeColor = "";
     String birthYear = "";
     String gender = "";
-    String homeWorld = "";
+    String homeworld = "";
     String species = "";
 
     // no-arg constructor
-    StarWarsCharacters() {}
+    public StarWarsCharacter() {}
 
     public List getList() {
         return this.list;
@@ -69,7 +74,7 @@ class StarWarsCharacters implements java.io.Serializable {
     }
 
     public String getHomeWorld() {
-        return this.homeWorld;
+        return this.homeworld;
     }
 
     public String getSpecies() {
@@ -113,43 +118,49 @@ class StarWarsCharacters implements java.io.Serializable {
     }
 
     public void setHomeWorld(String homeWorld) {
-        this.homeWorld = homeWorld;
+        this.homeworld = homeWorld;
     }
 
     public void setSpecies(String species) {
         this.species = species;
     }
 
+    public String toString() {
+        String output = "";
+        output += getName();
+        return output;
+    }
 }
 
 public class JarJarBinks {
     public static void main(String args[]) {
-        // I/O
-        /*try {
-            BufferedReader in = new BufferedReader(new FileReader("test.txt"));
-            BufferedWriter out = new BufferedWriter(new FileWriter("output.txt"));
-
-            String line = in.readLine();
-            out.write(line);
-            out.close();
-            StringTokenizer tokenize = new StringTokenizer(line);
-            int x = Integer.parseInt(tokenize.nextToken());
-        } catch(Exception e) {
-        }*/
-
-        // CSV I/O
-        Scanner input = new Scanner(new File("characters.csv"));
-        input.useDelimiter(",");
-        while(input.hasNextLine()) {
-            String[] characters = input.nextLine().split(","); // row data
-
-            for(String info: characters) {
-                System.out.print(info + " ");
-            }
-            System.out.println();
-        }
-        input.close();
         try {
+            List<StarWarsCharacter> characterList = new ArrayList<>();
+            Reader in = new FileReader("characters.csv");
+            CSVFormat CSVparser = CSVFormat.Builder.create().setHeader().build();
+            Iterable<CSVRecord> records = CSVparser.parse(in);
+
+            for(CSVRecord record: records) {
+                StarWarsCharacter character = new StarWarsCharacter();
+                character.name = record.get("name");
+                character.height = record.get("height");
+                character.mass = record.get("mass");
+                character.hairColor = record.get("hair_color");
+                character.skinColor = record.get("skin_color");
+                character.eyeColor = record.get("eye_color");
+                character.birthYear = record.get("birth_year");
+                character.gender = record.get("gender");
+                character.homeworld = record.get("homeworld");
+                character.species = record.get("species");
+
+                //System.out.println(character);
+                characterList.add(character);
+            }
+
+            FileWriter out = new FileWriter("characters.json");
+            Gson gson = new Gson();
+            gson.toJson(characterList, out);
+            out.close();
         } catch(Exception e) {
         }
     }
