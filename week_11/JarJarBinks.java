@@ -1,5 +1,3 @@
-package assignment;
-
 /**
  * JarJarBinks.java = Week 11 Assignment
  * @author guilalr2
