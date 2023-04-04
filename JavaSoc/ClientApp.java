@@ -1,4 +1,5 @@
-package JavaSoc;
+import java.util.List;
+import java.util.ArrayList;
 
 interface Activity {
     String getURI();
@@ -47,4 +48,88 @@ interface App {
 }
 
 public class ClientApp implements App {
+    public Inbox inbox;
+    public Outbox outbox;
+
+    public Inbox getInbox() {
+        return this.inbox;
+    }
+
+    public Outbox getOutbox() {
+        return this.outbox;
+    }
+
+    public String demo() {
+        return "This should include your demo output.";
+    }
+}
+
+class Person {
+    String name;
+    String username;
+    String bio;
+    Inbox inbox;
+    Outbox outbox;
+    List followers;
+    List following;
+    List liked;
+
+    // getters
+    public String getName() {
+        return this.name;
+    }
+
+    public String getUsername() {
+        return this.username;
+    }
+
+    public String bio() {
+        return this.bio;
+    }
+
+    public List getFollowers() {
+        return this.followers;
+    }
+
+    public List getFollowing() {
+        return this.following;
+    }
+
+    public List getLiked() {
+        return this.liked;
+    }
+
+    // setters
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    Person() {
+        setName("");
+        setUsername("");
+    }
+
+    Person(String name, String username) {
+        setName(name);
+        setUsername(username);
+    }
+
+    public String toString() {
+        return "Name: "+getName()+"\n" + 
+               "Username: "+getUsername()+"\n";
+    }
+}
+
+class Test {
+    public static void main(String args[]) {
+        Person p = new Person("Renso", "osner");
+        System.out.println(p);
+
+        Person q = new Person();
+        System.out.println(q);
+    }
 }
