@@ -1,3 +1,4 @@
+
 /*
 * Ideas:
 * - The Activity class will extend StreamObject.
@@ -61,18 +62,62 @@ enum Audience {
     GLOBAL, FRIENDS, CLOSEFRIENDS, PERSONAL
 }
 
-class Person implements Outbox {
-    // Inbox implementation
+class In implements Inbox {
+    List<Activity> inbox = new ArrayList<Activity>();
 
-    // Outbox implementation
-    List<Activity> outbox = new ArrayList<Activity>();
+    public List<Activity> getInbox() {
+        return this.inbox;
+    }
 
-    // sends a message and adds it to the Outbox
-    public boolean send(Activity activity) {
-        outbox.add(activity);
+    public void setInbox(List<Activity> inbox) {
+        this.inbox = inbox;
+    }
+
+    // receives a message and adds it to the Inbox
+    public boolean receive(Activity activity) {
+        this.inbox.add(activity);
         return true;
     }
 
+    // removes and retrives the next message from inbox
+    public Activity readNext() {
+        if (getInbox().isEmpty()) {
+            return null;
+        }
+        return getInbox().remove(0);
+    }
+
+    public Activity getNext() {
+        if (getInbox().isEmpty()) {
+            return null;
+        }
+        return getInbox().get(0);
+    }
+
+    // returns count of unread messages in inbox
+    public int getCount() {
+        return getInbox().size();
+    }
+}
+
+class Out implements Outbox {
+    List<Activity> outbox = new ArrayList<Activity>();
+
+    public List<Activity> getOutbox() {
+        return this.outbox;
+    }
+
+    public void setOutbox(List<Activity> outbox) {
+        this.outbox = outbox;
+    }
+
+    // sends a message and adds it to the Outbox
+    public boolean send(Activity activity) {
+        this.outbox.add(activity);
+        return true;
+    }
+
+    // removes and delivers the next message from outbox
     // returns an Activity, or null if there are no messages
     public Activity deliverNext() {
         if (getOutbox().isEmpty()) {
@@ -81,10 +126,24 @@ class Person implements Outbox {
         return getOutbox().remove(0);
     }
 
+    public Activity getNext() {
+        if (getOutbox().isEmpty()) {
+            return null;
+        }
+        return getOutbox().get(0);
+    }
+
     // returns count of unsent messages in outbox
     public int getCount() {
         return getOutbox().size();
     }
+
+    Out() {
+        setOutbox(outbox);
+    }
+}
+
+class Person {
 
     // Person fields
     static int counter = 0;
@@ -92,7 +151,6 @@ class Person implements Outbox {
     String username;
     String URI = "https://JavaSoc.com/";
     String bio;
-    Inbox inbox;
     List<Person> followers;
     List<Person> following;
     List<Person> liked;
@@ -110,7 +168,7 @@ class Person implements Outbox {
         return this.URI;
     }
 
-    public String bio() {
+    public String getBio() {
         return this.bio;
     }
 
@@ -126,10 +184,6 @@ class Person implements Outbox {
         return this.liked;
     }
 
-    public List<Activity> getOutbox() {
-        return this.outbox;
-    }
-
     // setters
     public void setName(String name) {
         this.name = name;
@@ -141,10 +195,6 @@ class Person implements Outbox {
 
     public void setBio(String bio) {
         this.bio = bio;
-    }
-
-    public void setInbox(Inbox inbox) {
-        this.inbox = inbox;
     }
 
     public void setFollowers(List<Person> followers) {
@@ -175,7 +225,6 @@ class Person implements Outbox {
         setName(name);
         setUsername(username);
         setBio(bio);
-        setInbox(inbox);
         setFollowers(followers);
         setFollowing(following);
         setLiked(liked);
@@ -305,7 +354,7 @@ class StreamObject implements Activity {
     }
 }
 
-// Implement actual activity, e.g. Like, Post, which extends StreamObject
+// Implement actual activities here, e.g. Like, Post, which extends StreamObject
 class PostActivity extends StreamObject {
     static int count = 0;
 
@@ -350,24 +399,55 @@ class PostActivity extends StreamObject {
     }
 }
 
-// Implement Inbox and Outbox
-class Out implements Outbox {
-    List<Activity> outbox = new ArrayList<Activity>();
+class LikeActivity extends StreamObject {
+    // fields
+    static int counter = 0;
+    Person sender;
+    Person receiver;
+    Activity activity;
 
-    public boolean send(Activity activity) {
-        outbox.add(activity);
-        return true;
+    public Person getSender() {
+        return this.sender;
     }
 
-    public Activity deliverNext() {
-        if (outbox.isEmpty()) {
-            return null;
-        }
-        return outbox.remove(0);
+    public Person getReceiver() {
+        return this.receiver;
     }
 
-    public int getCount() {
-        return outbox.size();
+    public Activity getActivity() {
+        return this.activity;
+    }
+
+    public void setSender(Person q) {
+        this.sender = q;
+    }
+
+    public void setReceiver(Person p) {
+        this.receiver = p;
+    }
+
+    public void setActivity(Activity activity) {
+        this.activity = activity;
+    }
+
+    // Constructors
+    LikeActivity() {
+    }
+
+    LikeActivity(Person p, Person q, StreamObject activity) {
+        setSender(q);
+        setReceiver(p);
+        setActivity(activity);
+        activity.likes += 1;
+        setURI(URI + getSender().username + "/liked/" + getReceiver().username + "/" + activity.getURI().split("/")[4]);
+    }
+
+    public String toString() {
+        return getSender().username + " added a Like to Outbox\n" +
+                "- URI: " + getURI() + "\n" +
+                "- Post: " + getActivity().getURI() + "\n" +
+                "- Action: " + getSender().username + " liked " + getReceiver().username + "'s post\n\n";
+
     }
 }
 
@@ -387,28 +467,58 @@ class ClientApp implements App {
         String output = "";
         LocalDate today = LocalDate.now();
 
+        In pInbox = new In();
+        Out pOutbox = new Out();
         Person p = new Person("Renso", "osner");
         output += p;
 
-        // Person q = new Person("Troller", "DaTroll");
-        // output += q;
+        Out qOutbox = new Out();
+        Person q = new Person("Troller", "DaTroll");
+        output += q;
 
-        // Adding an activity to the outbox
-        PostActivity post = new PostActivity(p, "Note", "This is the first note in JavaSoc", Audience.GLOBAL, 0, 0, today);
-        p.send(post);
-        output += post;
-        //output += p.getCount() + "\n";
+        // Creating a post
+        PostActivity post = new PostActivity(p, "Note", "This is the first note in JavaSoc", Audience.GLOBAL, 0, 0,
+                today);
 
-        // Removing Activity from the outbox
-        output += p.deliverNext();
-        output += p.username + " Outbox delivery\n"+
-                "- " + p.getURI() + " posted\n";
+        // Adding an Activity to the outbox
+        pOutbox.send(post);
+        output += pOutbox.getNext().toString();
 
-        // checking if there are activities in the outbox
-        // output += p.getCount();
+        // output += pOutbox.getCount() + "\n";
 
-        // PostActivity post1 = new PostActivity(q, true);
-        // output += post1;
+        // Delivering the next message from outbox
+        output += p.username + " Outbox delivery\n" +
+                "- " + pOutbox.deliverNext().getURI() + "\n" +
+                "- Action: Post\n\n";
+
+        // output += pOutbox.getCount() + "\n";
+
+        // Liking a post
+        LikeActivity like = new LikeActivity(p, q, post);
+
+        // Adding an Activity to outbox and adding it to receiver's inbox
+        qOutbox.send(like);
+        output += qOutbox.getNext().toString();
+
+        // Delivering the next message from outbox
+        output += q.username + " Outbox delivery\n" +
+                "- " + qOutbox.deliverNext().getURI() + "\n" +
+                "- Action: Like\n\n";
+
+        // Adding activity to Receiver's inbox
+        pInbox.receive(like);
+
+        // checking something is in the inbox
+        // output += pInbox.getCount();
+
+        output += p.username + " Inbox delivery\n" +
+                "- " + pInbox.getNext().getURI() + "\n\n";
+
+        // checking inbox
+        // output += pInbox.getCount();
+
+        output += p.username + " reads a LikeActivity from Inbox\n" +
+        "- " + pInbox.readNext().getURI() + "\n\n";
 
         return output;
     }
