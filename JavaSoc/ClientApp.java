@@ -1,11 +1,3 @@
-
-/*
-* Ideas:
-* - The Activity class will extend StreamObject.
-* - Each activity will be a class that extends StreamObject and just pick whichever fields are revelevant to them.
-* - The activiies will have constructors where one of the args are of type Person, where we will be able to access the Person's details and conect them to the activity.
-* - Inbox and Outbox will be lists of activities.
-*/
 import java.util.List;
 import java.util.ArrayList;
 import java.time.LocalDate;
@@ -62,7 +54,10 @@ enum Audience {
     GLOBAL, FRIENDS, CLOSEFRIENDS, PERSONAL
 }
 
+/* Implementation of Inbox */
 class In implements Inbox {
+
+    // Creating a new list to store activities.
     List<Activity> inbox = new ArrayList<Activity>();
 
     public List<Activity> getInbox() {
