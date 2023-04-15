@@ -98,6 +98,11 @@ class In implements Inbox {
     public int getCount() {
         return getInbox().size();
     }
+
+    public String inboxDelivery() {
+        return " Inbox Delivery\n" +
+                "- " + getInbox().get(0).getURI() + "\n\n";
+    }
 }
 
 class Out implements Outbox {
@@ -141,18 +146,22 @@ class Out implements Outbox {
     Out() {
         setOutbox(outbox);
     }
+
+    public String outboxDelivery() {
+        return " Outbox Delivery\n" +
+                "- " + deliverNext().getURI() + "\n";
+    }
 }
 
 class Person {
-
     // Person fields
     static int counter = 0;
     String name;
     String username;
     String URI = "https://JavaSoc.com/";
     String bio;
-    List<Person> followers;
-    List<Person> following;
+    List<Person> followers = new ArrayList<Person>();
+    List<Person> following = new ArrayList<Person>();
     List<Person> liked;
 
     // getters
@@ -180,10 +189,6 @@ class Person {
         return this.following;
     }
 
-    public List<Person> getLiked() {
-        return this.liked;
-    }
-
     // setters
     public void setName(String name) {
         this.name = name;
@@ -205,35 +210,26 @@ class Person {
         this.following = following;
     }
 
-    public void setLiked(List<Person> liked) {
-        this.liked = liked;
-    }
-
-    Person() {
-        counter += 1;
-    }
-
     Person(String name, String username) {
         counter += 1;
         setName(name);
         setUsername(username);
     }
 
-    Person(String name, String username, String bio, Inbox inbox, Outbox outbox, List<Person> followers,
-            List<Person> following, List<Person> liked) {
-        counter += 1;
+    Person(String name, String username, String bio, List<Person> followers, List<Person> following) {
         setName(name);
         setUsername(username);
         setBio(bio);
         setFollowers(followers);
         setFollowing(following);
-        setLiked(liked);
     }
 
     public String toString() {
-        return "Person" + counter + " added" + "\n" +
+        return getUsername() + "'s Profile" + "\n" +
                 "- URI: " + getURI() + getUsername() + "\n" +
-                "- name: " + getName() + "\n\n";
+                "- name: " + getName() + "\n" +
+                "- followers: " + getFollowers().size() + "\n" +
+                "- following: " + getFollowing().size() + "\n\n";
     }
 }
 
@@ -243,14 +239,14 @@ class StreamObject implements Activity {
     String attributedTo;
     String type;
     String content;
-    String description;
     Audience audience;
     int likes;
     int shares;
     String name;
     String username;
     LocalDate published;
-    boolean deleted;
+    LocalDate deleted;
+    boolean deletedPost;
 
     public String getURI() {
         return this.URI;
@@ -270,10 +266,6 @@ class StreamObject implements Activity {
 
     public String getContent() {
         return this.content;
-    }
-
-    public String getDescription() {
-        return this.description;
     }
 
     public Audience getAudience() {
@@ -300,8 +292,12 @@ class StreamObject implements Activity {
         return this.published;
     }
 
-    public boolean getDeleted() {
+    public LocalDate getDeleted() {
         return this.deleted;
+    }
+
+    public boolean getDeletedPost() {
+        return this.deletedPost;
     }
 
     // Setters
@@ -319,10 +315,6 @@ class StreamObject implements Activity {
 
     public void setContent(String content) {
         this.content = content;
-    }
-
-    public void setDesciption(String description) {
-        this.description = description;
     }
 
     public void setAudience(Audience audience) {
@@ -349,53 +341,65 @@ class StreamObject implements Activity {
         this.published = published;
     }
 
-    public void setDeleted(boolean deleted) {
+    public void setDeleted(LocalDate deleted) {
         this.deleted = deleted;
+    }
+
+    public void setDeletedPost(boolean deletedPost) {
+        this.deletedPost = deletedPost;
     }
 }
 
 // Implement actual activities here, e.g. Like, Post, which extends StreamObject
-class PostActivity extends StreamObject {
+class CreatePostActivity extends StreamObject {
     static int count = 0;
 
     // Constructors
-    PostActivity() {
-    }
-
-    PostActivity(Person person, String type, String content, Audience audience, int likes, int shares,
+    CreatePostActivity(Person person, String content, Audience audience, int likes, int shares,
             LocalDate published) {
         count += 1;
-        setURI(URI + person.username + "/post" + count);
+        setURI(URI + person.getUsername() + "/post" + count);
         setUsername(person.username);
-        setType(type);
+        setType("Post");
         setContent(content);
         setAudience(audience);
         setLikes(likes);
         setShares(shares);
         setPublished(published);
-        setDeleted(false);
-    }
-
-    PostActivity(Person person, boolean deleted) {
-        setURI(URI);
-        setUsername(person.username);
-        setDeleted(true);
     }
 
     public String toString() {
-        if (deleted) {
-            return username + " added a " + type + " to Outbox\n" +
-                    "- Post was deleted.\n\n";
+        if(deletedPost) {
+            return "Error: \n"+
+                    "- This post was deleted\n";
         }
-        return username + " added a " + type + " to Outbox\n" +
-                "- URI: " + getURI() + "\n" +
+        return "- URI: " + getURI() + "\n" +
+                "- Type: " + getType() + "\n" +
                 "- audience: " + getAudience() + "\n" +
                 "- content: " + getContent() + "\n" +
                 "- likes: " + getLikes() + "\n" +
                 "- shares: " + getShares() + "\n" +
-                "- published: " + getPublished() + "\n" +
-                "- deleted: " + getDeleted() + "\n" +
-                "\n";
+                "- published: " + getPublished() + "\n\n";
+    }
+}
+
+class DeletePostActivity extends StreamObject {
+    static int count = 0;
+
+    // Constructors
+    DeletePostActivity(Person person, CreatePostActivity post, LocalDate time) {
+        count += 1;
+        setType("Delete post");
+        setURI(post.getURI() + "/deleted");
+        setDeleted(time);
+        // implement this so that it deletes the CreatePostActivity
+        post.setDeletedPost(true);
+    }
+
+    public String toString() {
+        return "- URI: " + getURI() + "\n" +
+               "- Type: " + getType() + "\n" +
+               "- Deleted: " + getDeleted() + "\n\n";
     }
 }
 
@@ -435,8 +439,9 @@ class LikeActivity extends StreamObject {
     }
 
     LikeActivity(Person p, Person q, StreamObject activity) {
-        setSender(q);
-        setReceiver(p);
+        setSender(p);
+        setType("Like");
+        setReceiver(q);
         setActivity(activity);
         activity.likes += 1;
         setURI(URI + getSender().username + "/liked/" + getReceiver().username + "/" + activity.getURI().split("/")[4]);
@@ -446,8 +451,86 @@ class LikeActivity extends StreamObject {
         return getSender().username + " added a Like to Outbox\n" +
                 "- URI: " + getURI() + "\n" +
                 "- Post: " + getActivity().getURI() + "\n" +
-                "- Action: " + getSender().username + " liked " + getReceiver().username + "'s post\n\n";
+                "- Type: " + getType() + "\n\n";
 
+    }
+}
+
+class FollowActivity extends StreamObject {
+    // fields
+    Person sender;
+    Person receiver;
+
+    public Person getSender() {
+        return this.sender;
+    }
+
+    public Person getReceiver() {
+        return this.receiver;
+    }
+
+    public void setSender(Person q) {
+        this.sender = q;
+    }
+
+    public void setReceiver(Person p) {
+        this.receiver = p;
+    }
+
+    FollowActivity(Person sender, Person receiver) {
+        setType("Follow");
+        setSender(sender);
+        setReceiver(receiver);
+        setURI(URI + sender.username + "/follow");
+        getSender().getFollowing().add(receiver);
+        getReceiver().getFollowers().add(sender);
+    }
+
+    public String toString() {
+        return getSender().username + " adds a Follow to Outbox\n" +
+                "- URI: " + getURI() + "\n" +
+                "- actor: " + getSender().getUsername() + "\n" +
+                "- object: " + getReceiver().getUsername() + "\n" +
+                "- Type: " + getType() + "\n\n";
+    }
+}
+
+class UnfollowActivity extends StreamObject {
+    // fields
+    Person sender;
+    Person receiver;
+
+    public Person getSender() {
+        return this.sender;
+    }
+
+    public Person getReceiver() {
+        return this.receiver;
+    }
+
+    public void setSender(Person q) {
+        this.sender = q;
+    }
+
+    public void setReceiver(Person p) {
+        this.receiver = p;
+    }
+
+    UnfollowActivity(Person sender, Person receiver) {
+        setType("Unfollow");
+        setSender(sender);
+        setReceiver(receiver);
+        setURI(URI + sender.username + "/unfollow");
+        getSender().getFollowing().remove(receiver);
+        getReceiver().getFollowers().remove(sender);
+    }
+
+    public String toString() {
+        return getSender().username + " adds a Unfollow to Outbox\n" +
+                "- URI: " + getURI() + "\n" +
+                "- actor: " + getSender().getUsername() + "\n" +
+                "- object: " + getReceiver().getUsername() + "\n" +
+                "- Type: " + getType() + "\n\n";
     }
 }
 
@@ -467,58 +550,113 @@ class ClientApp implements App {
         String output = "";
         LocalDate today = LocalDate.now();
 
+        // Creating Person p, and their personal inbox and outbox
         In pInbox = new In();
         Out pOutbox = new Out();
         Person p = new Person("Renso", "osner");
-        output += p;
+        output += "Created " + p;
 
+        // Creating Person q, and their personal inbox and outbox
+        In qInbox = new In();
         Out qOutbox = new Out();
-        Person q = new Person("Troller", "DaTroll");
-        output += q;
+        Person q = new Person("Ronan", "bro");
+        output += "Created " + q;
 
-        // Creating a post
-        PostActivity post = new PostActivity(p, "Note", "This is the first note in JavaSoc", Audience.GLOBAL, 0, 0,
-                today);
+        // Creating a post by Person p
+        CreatePostActivity post = new CreatePostActivity(p, "This is the first note in JavaSoc", Audience.GLOBAL, 0, 0, today);
 
-        // Adding an Activity to the outbox
+        // Person p: adding an Activity to the outbox
         pOutbox.send(post);
+        output += p.username + " added a " + post.type + " to Outbox\n";
         output += pOutbox.getNext().toString();
 
-        // output += pOutbox.getCount() + "\n";
+        // Person p: delivering the next message from outbox
+        output += p.username + pOutbox.outboxDelivery() + "\n";
 
-        // Delivering the next message from outbox
-        output += p.username + " Outbox delivery\n" +
-                "- " + pOutbox.deliverNext().getURI() + "\n" +
-                "- Action: Post\n\n";
+        // Person q: Liking Person p's post
+        LikeActivity like = new LikeActivity(q, p, post);
 
-        // output += pOutbox.getCount() + "\n";
-
-        // Liking a post
-        LikeActivity like = new LikeActivity(p, q, post);
-
-        // Adding an Activity to outbox and adding it to receiver's inbox
+        // Person q: adding LikeActivity to their outbox
         qOutbox.send(like);
         output += qOutbox.getNext().toString();
 
-        // Delivering the next message from outbox
-        output += q.username + " Outbox delivery\n" +
-                "- " + qOutbox.deliverNext().getURI() + "\n" +
-                "- Action: Like\n\n";
+        // Person q: delivering the next message from outbox
+        output += q.username + qOutbox.outboxDelivery() + "\n";
 
-        // Adding activity to Receiver's inbox
+        // Adding like to Person p's inbox
         pInbox.receive(like);
+        output += p.username + pInbox.inboxDelivery();
 
-        // checking something is in the inbox
-        // output += pInbox.getCount();
-
-        output += p.username + " Inbox delivery\n" +
-                "- " + pInbox.getNext().getURI() + "\n\n";
-
-        // checking inbox
-        // output += pInbox.getCount();
-
+        // Person p: receives the like and removes it from their inbox
         output += p.username + " reads a LikeActivity from Inbox\n" +
-        "- " + pInbox.readNext().getURI() + "\n\n";
+                "- " + pInbox.readNext().getURI() + "\n\n";
+
+        // Person p: checking that the likes on the post has increased by 1
+        output += p.username + " is viewing a post\n" + post;
+
+        // creating a follow
+        FollowActivity follow = new FollowActivity(p, q);
+
+        // adding the follow to the outbox
+        pOutbox.send(follow);
+        output += follow;
+
+        // Person p: delivering the next message to Person p outbox
+        output += p.username + pOutbox.outboxDelivery() +
+                "- added " + q.username + " to Following list\n\n";
+
+        // adding follow to Person q's inbox
+        qInbox.receive(follow);
+        output += q.username + qInbox.inboxDelivery();
+
+        // Person q: receives the follow and removes it from their inbox
+        output += q.username + " reads a FollowActivity from Inbox\n" +
+                "- added " + p.username + " to Followers list\n\n";
+
+        // Person p: checking their following
+        output += p;
+
+        // Person q: checking their followers
+        output += q;
+
+        // creating an unfollow
+        UnfollowActivity unfollow = new UnfollowActivity(p, q);
+
+        // adding the unfollow to the outbox
+        pOutbox.send(unfollow);
+        output += unfollow;
+
+        // Person p: delivering the next message to Person p outbox
+        output += p.username + pOutbox.outboxDelivery() +
+                "- removed " + q.username + " from Following list\n\n";
+
+        // adding unfollow to Person q's inbox
+        qInbox.receive(unfollow);
+        output += q.username + qInbox.inboxDelivery();
+
+        // Peron q: receives the folow and removes it from their inbox
+        output += q.username + "reads an UnfollowActivity from Inbox\n" +
+                "- removed " + p.username + " from Followers list\n\n";
+
+        // Person p: checking their following
+        output += p;
+
+        // Person q: checking their followers
+        output += q;
+
+        // creating a delete post
+        DeletePostActivity deletePost = new DeletePostActivity(p, post, today);
+
+        // Person p: adding delete to the outbox
+        pOutbox.send(deletePost);
+        output += p.username + " added a " + deletePost.type + " to Outbox\n";
+        output += pOutbox.getNext().toString();
+
+        // Person p: delivering the next message from outbox
+        output += p.username + pOutbox.outboxDelivery() + "\n";
+
+        // checking if post still exists.
+        output += post;
 
         return output;
     }
