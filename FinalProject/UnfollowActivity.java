@@ -1,8 +1,13 @@
+/**
+ * Represents an activity of unfollowing another user.
+ */
 class UnfollowActivity extends StreamObject {
-    // fields
+
+    // Fields
     Person sender;
     Person receiver;
 
+    // Getters
     public Person getSender() {
         return this.sender;
     }
@@ -11,6 +16,7 @@ class UnfollowActivity extends StreamObject {
         return this.receiver;
     }
 
+    // Setters
     public void setSender(Person q) {
         this.sender = q;
     }
@@ -19,6 +25,14 @@ class UnfollowActivity extends StreamObject {
         this.receiver = p;
     }
 
+    /**
+     * Creates a new UnfollowActivity object with the given sender and receiver.
+     * Removes the receiver from the sender's following list and removes the sender
+     * from the receiver's followers list.
+     *
+     * @param sender   the user who initiated the unfollow activity
+     * @param receiver the user who is being unfollowed
+     */
     UnfollowActivity(Person sender, Person receiver) {
         setType("Unfollow");
         setSender(sender);
@@ -28,6 +42,11 @@ class UnfollowActivity extends StreamObject {
         getReceiver().getFollowers().remove(sender);
     }
 
+    /**
+     * Returns a string representation of the UnfollowActivity object.
+     *
+     * @return a string representation of the UnfollowActivity object
+     */
     public String toString() {
         return getSender().username + " adds a Unfollow to Outbox\n" +
                 "- URI: " + getURI() + "\n" +

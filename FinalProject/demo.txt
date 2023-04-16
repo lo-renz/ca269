@@ -1,0 +1,143 @@
+Created osner's Profile
+- URI: https://JavaSoc.com/osner
+- name: Renso
+- bio: Hocus pocus, there's a pizza on my focus.
+- followers: 0
+- following: 0
+
+Created bro's Profile
+- URI: https://JavaSoc.com/bro
+- name: Dabro
+- bio: Winton
+- followers: 0
+- following: 0
+
+osner added a Post to Outbox
+- URI: https://JavSoc.com/osner/post1
+- Type: Post
+- audience: GLOBAL
+- content: This is the first note in JavaSoc
+- likes: 0
+- shares: 0
+- published: 2023-04-15
+
+osner Outbox Delivery
+- https://JavSoc.com/osner/post1
+
+bro added a Like to Outbox
+- URI: https://JavSoc.com/bro/liked/osner/post1
+- Post: https://JavSoc.com/osner/post1
+- Type: Like
+
+bro Outbox Delivery
+- https://JavSoc.com/bro/liked/osner/post1
+
+osner Inbox Delivery
+- https://JavSoc.com/bro/liked/osner/post1
+
+osner reads a LikeActivity from Inbox
+- https://JavSoc.com/bro/liked/osner/post1
+
+osner is viewing a post
+- URI: https://JavSoc.com/osner/post1
+- Type: Post
+- audience: GLOBAL
+- content: This is the first note in JavaSoc
+- likes: 1
+- shares: 0
+- published: 2023-04-15
+
+bro added a Share to Outbox
+- URI: https://JavSoc.com/bro/shared/osner/post1
+- Post: https://JavSoc.com/osner/post1
+- Type: Share
+
+bro Outbox Delivery
+- https://JavSoc.com/bro/shared/osner/post1
+
+osner Inbox Delivery
+- https://JavSoc.com/bro/shared/osner/post1
+
+osner reads a ShareActivity from Inbox
+- https://JavSoc.com/bro/shared/osner/post1
+
+osner is viewing a post
+- URI: https://JavSoc.com/osner/post1
+- Type: Post
+- audience: GLOBAL
+- content: This is the first note in JavaSoc
+- likes: 1
+- shares: 1
+- published: 2023-04-15
+
+osner adds a Follow to Outbox
+- URI: https://JavSoc.com/osner/follow
+- actor: osner
+- object: bro
+- Type: Follow
+
+osner Outbox Delivery
+- https://JavSoc.com/osner/follow
+- added bro to Following list
+
+bro Inbox Delivery
+- https://JavSoc.com/osner/follow
+
+bro reads a FollowActivity from Inbox
+- added osner to Followers list
+
+osner's Profile
+- URI: https://JavaSoc.com/osner
+- name: Renso
+- bio: Hocus pocus, there's a pizza on my focus.
+- followers: 0
+- following: 1
+
+bro's Profile
+- URI: https://JavaSoc.com/bro
+- name: Dabro
+- bio: Winton
+- followers: 1
+- following: 0
+
+osner adds a Unfollow to Outbox
+- URI: https://JavSoc.com/osner/unfollow
+- actor: osner
+- object: bro
+- Type: Unfollow
+
+osner Outbox Delivery
+- https://JavSoc.com/osner/unfollow
+- removed bro from Following list
+
+bro Inbox Delivery
+- https://JavSoc.com/osner/follow
+
+broreads an UnfollowActivity from Inbox
+- removed osner from Followers list
+
+osner's Profile
+- URI: https://JavaSoc.com/osner
+- name: Renso
+- bio: Hocus pocus, there's a pizza on my focus.
+- followers: 0
+- following: 0
+
+bro's Profile
+- URI: https://JavaSoc.com/bro
+- name: Dabro
+- bio: Winton
+- followers: 0
+- following: 0
+
+osner added a Delete post to Outbox
+- URI: https://JavSoc.com/osner/post1/deleted
+- Type: Delete post
+- Deleted: 2023-04-15
+
+osner Outbox Delivery
+- https://JavSoc.com/osner/post1/deleted
+
+Error: 
+- This post was deleted
+

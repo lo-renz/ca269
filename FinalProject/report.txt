@@ -1,0 +1,20 @@
+Hightlights
+- In my opinion, I cannot pick a highlight in my work because I can definitely improve on all the areas of my work.
+- I feel like my code isn't structured very well and is quite messy in areas.
+
+Lacks or Suffers
+- My time management was very poor. I didn't start the project until a week before the deadline.
+- I could have done better with printing out the output from each activity.
+- I dove straight into writing the code for the project without properly thinking about the structure.
+  - And because of this I had to rewrite, remove, and add different classes multiple times because of my rashness and not thinking first.
+  - Reflecting on this, I dove straight into writing the code because of the worry I felt from not being able to complete the other final assignements and projects.
+
+Future plans
+- I will take more time at the beginning of a project to plan out the structure of the code I will write.
+  - E.g. classes, methods, which classes inherit other classes, what classes implement which interface, etc.
+- I would also start a project earlier than I did this time, as I found myself rushing to try and complete other projects and assignments due around the same time as this.
+
+Testing
+- I tested my code by running the demo() method in my main() located in my ClientApp class.
+- I received help from some people in my course in the form of trying to understand the project spec and ways we could implement different things, e.g. which collection to use for inbox and outbox.
+- I did not receive help when writing my code.

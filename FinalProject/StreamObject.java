@@ -1,4 +1,8 @@
+import java.time.LocalDate;
+
 class StreamObject implements Activity {
+
+    // Fields
     String URI = "https://JavSoc.com/";
     String attatchment;
     String attributedTo;
@@ -13,6 +17,7 @@ class StreamObject implements Activity {
     LocalDate deleted;
     boolean deletedPost;
 
+    // Getters
     public String getURI() {
         return this.URI;
     }
