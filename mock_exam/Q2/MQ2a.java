@@ -1,32 +1,60 @@
 class Individual {
+    // fields
     public String name;
 
-    Individual(String name) {
+    // getter
+    public String getName() {
+        return this.name;
+    }
+
+    // setter
+    public void setName(String name) {
         this.name = name;
     }
 
-    Individual() {
+    // constructor
+    /**
+    * @param takes and sets the name of an individual.
+    */
+    Individual(String name) {
+        setName(name);
     }
 
     public String toString() {
-        return this.name;
+        return getName();
     }
 }
 
 class Person extends Individual {
+    // fields
     protected String nickname;
 
-    Person(String name, String nickname) {
-        this.name = name;
+    // getter
+    public String getNickname() {
+        return this.nickname;
+    }
+
+    // setter
+    public void setNickname(String nickname) {
         this.nickname = nickname;
     }
 
+    // constructor
+    /**
+    * @param name, the name of the person
+    * @param nickname, the nickname of the person
+    */
+    Person(String name, String nickname) {
+        super(name);
+        setNickname(nickname);
+    }
+
     public String toString() {
-        return this.name + " (" + nickname + ")";
+        return getName() + " (" + getNickname() + ")";
     }
 
     public static void main(String args[]) {
-        Person x = new Person("Renso", "Ren");
-        System.out.println(x);
+        Person a = new Person("Renso", "osner");
+        System.out.println(a);
     }
 }
