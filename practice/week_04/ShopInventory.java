@@ -385,8 +385,52 @@ public class ShopInventory {
      * <sale message>
      * and then returns the total.
      */
-    //public static double billItems(Item[] items, OnSale Sale) {
-    //}
+    public static double billItems(Item[] items, OnSale Sale) {
+        double totalPrice= 0.0;
+        for(Item item: items) {
+            totalPrice += item.price;
+        }
+
+        for(Item item: items) {
+            String storageInfo;
+
+            if(item instanceof Milk) {
+                Milk product = (Milk) item;
+                if(product.refrigerate(getCurrentTemperature()) == true) {
+                    storageInfo = product.storageProcedure();
+                    System.out.println(item.name + " ("+item.price+") " + "(Storage: " + storageInfo + ")");
+                }
+            }
+
+            else if(item instanceof Bread) {
+                Bread product = (Bread) item;
+                storageInfo = product.storageProcedure();
+                System.out.println(item.name + " ("+item.price+") " + "(Storage: " + storageInfo + ")");
+            }
+
+            else if(item instanceof Perfume) {
+                Perfume product = (Perfume) item;
+                storageInfo = product.storageProcedure();
+                System.out.println(item.name + " ("+item.price+") " + "(Storage: " + storageInfo + ")");
+            }
+
+            else {
+                System.out.println(item.name + " ("+item.price+") ");
+            }
+        }
+
+        if(Sale == null) {
+            return totalPrice;
+        }
+        else if(Sale.saleCondition(items) == true) {
+            double actualAmount = totalPrice;
+            totalPrice = Sale.reduction(totalPrice);
+            System.out.println("Actual Total: " + actualAmount);
+            System.out.println(Sale);
+            return totalPrice;
+        }
+        return 0.0;
+    }
 
     /**
      * getCurrentTemperature returns the current temperature
