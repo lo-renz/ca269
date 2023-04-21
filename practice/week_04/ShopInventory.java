@@ -20,23 +20,18 @@ abstract class Item {
         return this.name;
     }
 
-    // setter
-    public void setName(Stirng name) {
-        this.name = name;
-    }
-
     /**
      * TODO: Contructor that assigns a name
      */
     Item(String name) {
-        setName(name);
+        this.name = name;
     }
 
     /**
      * TODO: toString that returns the name of the item
      */
     public String toString() {
-        getName();
+        return getName();
     }
 }
 
@@ -116,28 +111,6 @@ class Milk extends Item implements Refrigerate {
         super(name);
     }
 
-    // getters
-    public int getExpiryDays() {
-        return this.expiryDays;
-    }
-
-    public double getPrice() {
-        return this.price;
-    }
-
-    public int getMaxRefrigerateTemp() {
-        return this.maxRefrigerateTemp;
-    }
-
-    // setters
-    public void setExpiryDays(int expiryDays) {
-        this.expiryDays = expiryDays;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
     public void setMaxRefrigerateTemp(int maxRefrigerateTemp) {
         this.maxRefrigerateTemp = maxRefrigerateTemp;
     }
@@ -145,11 +118,11 @@ class Milk extends Item implements Refrigerate {
     /** TODO: Constructor that takes and sets name, expiry days, price,
      * and maximum refrigeration temperature.
      */
-    Milk(String name, int expiryDays, double price, int maxRefrigerateTemp) {
+    Milk(String name, int expiresInDays, double price, int maxRefrigerateTemp) {
         super(name);
-        setExpiryDays(expiryDays);
-        setPrice(price);
-        setMaxRefrigerateTemp(maxRefrigerateTemp);
+        this.expiresInDays = expiresInDays;
+        this.price = price;
+        this.maxRefrigerateTemp = maxRefrigerateTemp;
     }
 
     /**
@@ -158,7 +131,7 @@ class Milk extends Item implements Refrigerate {
      * current temperature being greater than refrigeration temperature.
      */
     public boolean refrigerate(double currentTemp) {
-        if(currentTemp > getMaxRefrigerateTemp()) {
+        if(currentTemp > this.maxRefrigerateTemp) {
             return true;
         }
         return false;
@@ -186,18 +159,13 @@ class Bread extends Item implements StorageCondition {
         super(name);
     }
 
-    // getters
-    public int getExpiryDays() {
-        return this.expiryDays;
-    }
-
     public double getPrice() {
         return this.price;
     }
 
     // setters
     public void setExpiryDays(int expiryDays) {
-        this.expiryDays = expiryDays;
+        this.expiresInDays = expiryDays;
     }
 
     public void setPrice(double price) {
@@ -239,20 +207,16 @@ class Perfume extends Item implements SecureItem {
 
     // getters
     public int getExpiryDays() {
-        return this.expiryDays;
+        return this.expiresInDays;
     }
 
     public double getPrice() {
         return this.price;
     }
 
-    public boolean getLocked() {
-        return this.locked;
-    }
-
     // setters
     public void setExpiryDays(int expiryDays) {
-        this.expiryDays = expiryDays;
+        this.expiresInDays = expiryDays;
     }
 
     public void setPrice(double price) {
@@ -285,18 +249,21 @@ class Perfume extends Item implements SecureItem {
      * If item is not locked, process fails. Otherwise succeeds.
      * Returns success value based on whether lock is successfully removed.
      */
-    boolean removeSecurityTag() {
+    public boolean removeSecurityTag() {
         if(getLocked() == false) {
             return false;
         }
-        setLocked(true);
+        return true;
     }
 
     /**
      * TODO: getter for checking whether item is locked.
      */
     boolean getLocked() {
-        
+        if(getLocked() == true) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -311,28 +278,39 @@ class Perfume extends Item implements SecureItem {
 /**
  * PlasticCup is a kind of Item
  */
-class PlasticCup {
+class PlasticCup extends Item {
 
     /**
      * TODO: The inherited constructor which takes only a name.
      * Is 'disabled' by making it private/hidden.
      */
     PlasticCup(String name) {
-    
+        super(name);
+    }
+
+    // setters
+    public void setExpiryDays(int expiryDays) {
+        this.expiresInDays = expiryDays;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
     }
 
     /**
      * TODO: Constructor that takes and sets name, expiry days, price
      */
     PlasticCup(String name, int expiryDays, double price) {
-        
+        super(name);
+        setExpiryDays(expiryDays);
+        setPrice(price);
     }
 }
 
 /**
  * TODO: EasterSale is a kind of On Sale event
  */
-class EasterSale {
+class EasterSale implements OnSale {
 
     final String message; // sale message
     final double minimumAmount; // minimum amount for the sale to qualify
@@ -371,14 +349,20 @@ class EasterSale {
      * a success value reflecting this.
      */
     public boolean saleCondition(Item[] items) {
-        
+        for(Item item: items) {
+            if(item.price > minimumAmount) {
+                return true;
+            }
+            return false;
+        }
+        return true;
     }
 
     /**
      * TODO: toString that returns the sale message
      */
-    toString() {
-    
+    public String toString() {
+        return this.message;
     }
 }
 
@@ -401,21 +385,20 @@ public class ShopInventory {
      * <sale message>
      * and then returns the total.
      */
-    public static double billItems(Item[] items, OnSale Sale) {
-        
-    }
+    //public static double billItems(Item[] items, OnSale Sale) {
+    //}
 
     /**
      * getCurrentTemperature returns the current temperature
      * Returns 24 to ensure StorageConditions on cooling are triggered
-     */ 
+     */
     private static int getCurrentTemperature() {
         return 24;
     }
 
     /**
      * main() for testing the code
-     * #Update Feb-11# 
+     * #Update Feb-11#
      * If your code is correct, it should produce the below outputs
      * i.e. for Customer 1 and Customer 2 as shown in comments
      */
