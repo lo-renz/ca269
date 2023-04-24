@@ -8,67 +8,76 @@ class Student {
 }
 
 class Classroom {
-    // fields
-    private List<Student> students = new ArrayList<Student>();
+    private List<Student> classroom = new ArrayList<>();
 
-    /**
-    * Adds a student to the list of students.
-    *
-    * @param is of type Student and is a student.
-    */
-    public void addStudent(Student student) {
-        this.students.add(student);
+    // getter
+    public List<Student> getClassroom() {
+        return this.classroom;
+    }
+
+    // setter
+    public void setClassroom(List<Student> classroom) {
+        this.classroom = classroom;
+    }
+
+    Classroom() {
+        setClassroom(getClassroom());
     }
 
     /**
-    * A method that returns a list of students that have marks greater than or equal to what is specified
+    * method that adds a student to the private list.
     *
-    * @param a specified mark, that decides whether a student is added to the gradedStudents list.
+    * @param student, a student that will be added to the list.
+    */
+    public void addStudent(Student student) {
+        getClassroom().add(student);
+    }
+
+    /**
+    * a method that will return a list of student that have marks greater than that passed as an arg.
+    *
+    * @param a mark that will be used when deciding which students are added to the list.
+    * @return returns a list of students who's marks are greater than or equal to marks passed as an arg.
     */
     public List<Student> getGradedStudents(int marks) {
-        List<Student> gradedStudents = new ArrayList<Student>();
-
-        for(Student student: gradedStudents) {
-            if(student.getMarks() == marks || student.getMarks() > marks) {
+        List<Student> gradedStudents = new ArrayList<>();
+        for(Student student: getClassroom()) {
+            if(student.getMarks() >= marks) {
                 gradedStudents.add(student);
             }
         }
         return gradedStudents;
     }
 
+    /**
+    * a method that returns the average marks of all students in the classroom.
+    *
+    * @return the average marks of all students in the classroom.
+    */
     public int getAverageMarks() {
-        int total = 0;
-
-        for(Student student: students) {
-            total += student.getMarks();
+        int averageMarks = 0;
+        for(Student student: getClassroom()) {
+            averageMarks += student.getMarks();
         }
-
-        return total / students.size();
+        return averageMarks / getClassroom().size();
     }
 
-    public String hasStudent(Student student) {
+    public static void main(String[] args) {
+        Student Renso = new Student();
+        Renso.setMarks(85);
 
-        if(students.contains(student)) {
-            return "Student is in the class.";
-        }
+        Student Random1 = new Student();
+        Random1.setMarks(39);
 
-        return "Student is not in the class.";
-    }
+        Student Random2 = new Student();
+        Random2.setMarks(39);
 
-    public static void main(String args[]) {
         Classroom classroom = new Classroom();
+        classroom.addStudent(Renso);
+        classroom.addStudent(Random1);
+        classroom.addStudent(Random2);
+        System.out.println(classroom.getGradedStudents(40));
 
-        Student x = new Student();
-        x.setMarks(100);
-        classroom.addStudent(x);
-
-        Student y = new Student();
-        y.setMarks(90);
-        classroom.addStudent(y);
-
-        Student z = new Student();
-        z.setMarks(80);
-
-        System.out.println(classroom.hasStudent(z));
+        System.out.println(classroom.getAverageMarks());
     }
 }

@@ -3,6 +3,12 @@ import java.util.ArrayList;
 import java.util.Queue;
 import java.util.LinkedList;
 import java.util.Collections;
+import java.util.Map;
+import java.util.HashMap;
+
+enum Grade {
+    GradeFail, GradePass, GradeDistinction;
+}
 
 class Student implements Comparable<Student> {
     private int marks;
@@ -42,6 +48,29 @@ class Classroom {
 
     Classroom() {
         setClassroom(getClassroom());
+    }
+
+    // MQ3c.java implementation
+    public static Map<Grade, Integer> gradedStudents = new HashMap<>();
+
+    public void calculateGradeStatistics() {
+        int fail = 0;
+        int pass = 0;
+        int distinction = 0;
+
+        for(Student student: getClassroom()) {
+            if(student.getMarks() < 40) {
+                fail += 1;
+            } else if(student.getMarks() >= 40 && student.getMarks() <= 75) {
+                pass += 1;
+            } else if(student.getMarks() > 75) {
+                distinction += 1;
+            }
+        }
+
+        gradedStudents.put(Grade.GradeFail, fail);
+        gradedStudents.put(Grade.GradePass, pass);
+        gradedStudents.put(Grade.GradeDistinction, distinction);
     }
 
     /**
@@ -100,14 +129,21 @@ class Classroom {
         Student Random2 = new Student();
         Random2.setMarks(39);
 
+        Student Random3 = new Student();
+        Random3.setMarks(74);
+
         Classroom classroom = new Classroom();
         classroom.addStudent(Renso);
         classroom.addStudent(Random1);
         classroom.addStudent(Random2);
+        classroom.addStudent(Random3);
 
         //System.out.println(classroom.getAverageMarks());
 
-        Queue<Student> graduating = classroom.getGraduatingStudents(30);
-        System.out.println(graduating.remove().getMarks());
+        //Queue<Student> graduating = classroom.getGraduatingStudents(30);
+        //System.out.println(graduating.remove().getMarks());
+
+        classroom.calculateGradeStatistics();
+        System.out.println(classroom.gradedStudents);
     }
 }
