@@ -1,10 +1,11 @@
 import java.util.List;
 import java.util.ArrayList;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
 class Item { }
 class Book extends Item {
-    int LENDING_PERIOD = 28;
+    public int LENDING_PERIOD = 28;
 }
 
 class AudioCD extends Item {
@@ -17,10 +18,12 @@ class VideoDVD extends Item {
 
 class Loan {
     Item item;
-    dateBorrowed;
-    dateReturned;
+    LocalDate dateBorrowed;
+    LocalDate dateReturned;
+    long noOfDaysBetween = ChronoUnit.DAYS.between(dateBorrowed, dateReturned);
 
-    double calculateFine() { }
+    public double calculateFine() {
+    }
 }
 
 class Library {
@@ -31,10 +34,19 @@ class Library {
     // if yes, take it out,
     // put it in a Loan record, set date borrwed,
     // add to onLoan
-    Item lendItem(Item item) {
-       if(inventory.contains(item)) {
-           inventory.remove(item);
-       }
+    public void lendItem(Item item) {
+        LocalDate today = LocalDate.now();
+        for(int i=0; i<inventory.size();) {
+            if(inventory.get(i) == item) {
+                Loan newLoan = new Loan();
+                newLoan.item = inventory.get(i);
+                newLoan.dateBorrowed = today;
+                onLoan.add(newLoan);
+                inventory.remove(i);
+                i -= 1;
+            }
+            i += 1;
+        }
     }
 
     // check if item is on loan
@@ -42,12 +54,22 @@ class Library {
     // calculate fine if any
     // take book out of loan record
     // put item back in inventory
-    double returnItem(Item item) {
+    public void returnItem(Item item) {
+        LocalDate today = LocalDate.now();
+        for(int i=0; i<onLoan.size();) {
+            if(onLoan.get(i).item == item) {
+                onLoan.get(i).dateReturned = today;
+            }
+        }
     }
 
     public static void main(String[] args) {
-        List<Integer> list = new ArrayList<>();
-        list.add(1);
-        System.out.println(list.remove(1));
+        Library library = new Library();
+
+        Book book = new Book();
+        LocalDate today = LocalDate.now();
+        book.dateBorrowed = today;
+        book.dateReturned = today.plusDays(29);
+        System.out.println(book.calculateFine());
     }
 }
