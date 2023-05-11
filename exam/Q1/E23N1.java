@@ -116,18 +116,25 @@ public class E23N1 {
 
     public static void main(String[] args) {
         E23N1 test1 = new E23N1();
-        System.out.println(test1.getPublished());
+        // System.out.println(test1.getPublished());
         test1.setPublished("1-6-23");
-        System.out.println(test1.getPublished());
+        // System.out.println(test1.getPublished());
         test1.setPublished("11-22-2023");
-        System.out.println(test1.getPublished());
+        // System.out.println(test1.getPublished());
 
         test1.setPublished(24, 6, 23);
-        System.out.println(test1.getPublished());
+        // System.out.println(test1.getPublished());
 
         test1.setTitle("The First Article");
         test1.setNumber(1);
         test1.setApproved(true);
+        // System.out.println(test1.isCameraReady());
+
+        System.out.println(test1.getTitle());
+        System.out.println(test1.getPublished());
+        System.out.println(test1.getNumber());
+        System.out.println(test1.getApproved());
+        // test1.setPublished("10-10-12345");
         System.out.println(test1.isCameraReady());
     }
 }
